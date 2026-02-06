@@ -1,0 +1,22 @@
+{
+  "backend/main.mo": "Empty Motoko actor with no methods.",
+  "feature_evidence.json": "Lists feature evidence entries linking features to affected frontend files and components.",
+  "frontend-file-summaries.txt": "Contains prewritten one‑sentence summaries for various frontend files.",
+  "frontend/index.css": "Defines Tailwind base layers and OKLCH color variables for light/dark themes.",
+  "frontend/index.html": "Minimal HTML shell mounting the React app and loading main.tsx.",
+  "frontend/src/App.tsx": "Sets up TanStack Router routes and wraps the app with a dark ThemeProvider and Toaster.",
+  "frontend/src/components/chat/ChatBubble.tsx": "Renders incoming or outgoing neon‑styled chat bubbles.",
+  "frontend/src/components/chat/MessageInputBar.tsx": "Message input form with controlled text field and send button.",
+  "frontend/src/components/layout/NeonScaffold.tsx": "Provides background image, gradient overlay, and Outlet container for all pages.",
+  "frontend/src/hooks/useActor.ts": "Creates and caches backend actor instances based on Internet Identity and manages query invalidation.",
+  "frontend/src/hooks/useInternetIdentity.ts": "Implements Internet Identity auth context, login/clear logic, and identity persistence.",
+  "frontend/src/hooks/usePwaInstallPrompt.ts": "Captures beforeinstallprompt events and exposes installability and a trigger function.",
+  "frontend/src/hooks/useQueries.ts": "Placeholder file for future backend‑related React Query hooks.",
+  "frontend/src/index.css": "Tailwind setup defining neon theme variables and custom glow/border utilities.",
+  "frontend/src/main.tsx": "Bootstraps React app with QueryClientProvider, InternetIdentityProvider, and global styles.",
+  "frontend/src/pages/ChatScreen.tsx": "Implements the main chat UI with a header, message list, and input bar, handling sending messages and navigation to premium and download pages.",
+  "frontend/src/pages/DownloadInstallScreen.tsx": "Provides a download/install screen with PWA install handling, link copying, and navigation back to the chat screen.",
+  "frontend/src/pages/PremiumScreen.tsx": "Displays premium feature previews with a hero badge, feature list, upgrade button, and navigation back to the chat screen.",
+  "frontend/tailwind.config.js": "Configures Tailwind with custom colors, animations, typography, container settings, and plugins for the app's neon theme.",
+  "project_state.json": "Stores project metadata including scope, features, known issues, and architectural notes for the Jero Chat app."
+}

@@ -1,0 +1,71 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add Download/Install route with copy link and PWA install prompt support",
+  "requirements": [
+    {
+      "id": "REQ-7",
+      "summary": "Create a new Download/Install screen that shows the runtime app link, supports copying it, and provides clear Android/iOS home-screen install instructions in English.",
+      "acceptanceCriteria": [
+        "A new route (e.g., /download) exists and renders a download/install page styled consistently with the current cyber/neon theme.",
+        "The page shows the app URL derived at runtime (window.location.origin) and a \"Copy link\" action that copies the URL to the clipboard and provides a visible confirmation (toast or inline status).",
+        "The page includes user-facing English instructions for: (1) Android Chrome/Edge \"Add to Home screen\" flow, and (2) iOS Safari \"Add to Home Screen\" flow.",
+        "No text suggests an APK is being generated; the page clearly indicates this is the web app install/link option."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/DownloadInstallScreen.tsx",
+          "operation": "create",
+          "description": "Implement the /download Download/Install screen UI using the existing neon/cyber styling conventions; derive and display the app URL from window.location.origin, add a \"Copy link\" action using the Clipboard API, and show clear English Android/iOS \"Add to Home Screen\" instructions that explicitly describe this as a web app install/link option (no APK language). Use shadcn-ui's Sonner toast (already present in the app) for copy confirmation messaging; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Register and wire a new TanStack Router route for /download that renders DownloadInstallScreen, keeping existing chat and premium navigation intact."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Add a prominent navigation entry from the Chat header to the Download/Install screen and include a back action on the Download/Install screen to return to chat.",
+      "acceptanceCriteria": [
+        "ChatScreen header includes a clearly accessible icon/button (with aria-label in English, e.g., \"Download / Install\") that navigates to the download/install route.",
+        "The Download/Install screen includes a back button that navigates back to the main chat route ('/').",
+        "Navigation works without breaking existing navigation between Chat and Premium screens."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ChatScreen.tsx",
+          "operation": "modify",
+          "description": "Add a new header icon/button placed next to the existing Premium button that navigates to /download; include an English aria-label such as \"Download / Install\" and keep the current header layout/styling consistent with the neon theme."
+        },
+        {
+          "path": "frontend/src/pages/DownloadInstallScreen.tsx",
+          "operation": "modify",
+          "description": "Add a back button in the screen header that navigates to '/' (main chat), matching the existing header/back interaction pattern used on PremiumScreen."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Enhance the Download/Install screen with a conditional PWA Install button that triggers the native install prompt when supported, otherwise fall back to manual instructions.",
+      "acceptanceCriteria": [
+        "On supported browsers, the screen displays an enabled \"Install\" button that triggers the captured beforeinstallprompt event prompt().",
+        "On unsupported browsers, the \"Install\" button is not shown or is disabled with explanatory English text directing users to manual install instructions.",
+        "Implementation does not require backend changes and does not break app rendering in non-PWA contexts."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/usePwaInstallPrompt.ts",
+          "operation": "create",
+          "description": "Create a small React hook to capture and manage the browser beforeinstallprompt event, expose whether an install prompt is available, and provide an action to trigger prompt() safely (no backend involvement)."
+        },
+        {
+          "path": "frontend/src/pages/DownloadInstallScreen.tsx",
+          "operation": "modify",
+          "description": "Use the PWA install prompt hook to conditionally render an enabled \"Install\" button when available; otherwise hide/disable it and show a short English explanation directing users to the manual Android/iOS instructions. Use shadcn-ui's Sonner toast (already present in the app) for optional success/cancel feedback if desired; verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}

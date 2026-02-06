@@ -1,0 +1,69 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-06T14:02:44.908Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 3,
+    "implemented": 3,
+    "items": [
+      {
+        "id": "REQ-7",
+        "summary": "Add a new \"Download\" (or \"Install\") screen/route in the React app that provides an app link users can open and copy, plus clear install instructions for adding the web app to the home screen on Android and iOS.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DownloadInstallScreen.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DownloadInstallScreen.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Add a prominent navigation entry point to the new Download/Install screen from the main chat screen header (next to the existing Premium button) and provide a back action from the Download/Install screen to return to the chat screen.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/ChatScreen.tsx",
+          "frontend/src/pages/DownloadInstallScreen.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/ChatScreen.tsx",
+          "frontend/src/pages/DownloadInstallScreen.tsx"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "If the browser supports PWA installation prompts, enhance the Download/Install screen with an \"Install\" button that triggers the native install prompt; otherwise, hide/disable the button and fall back to manual instructions.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/usePwaInstallPrompt.ts",
+          "frontend/src/pages/DownloadInstallScreen.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/usePwaInstallPrompt.ts",
+          "frontend/src/pages/DownloadInstallScreen.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "build-template/README.md",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/hooks/usePwaInstallPrompt.ts",
+    "frontend/src/pages/ChatScreen.tsx",
+    "frontend/src/pages/DownloadInstallScreen.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

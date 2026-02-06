@@ -1,0 +1,17 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-06T14:02:44.906Z",
+  "summary": "Diff adds a new /download route with a DownloadInstallScreen, adds a header navigation button in ChatScreen, and implements a PWA install prompt hook plus copy-link behavior with toast feedback. Based on the provided (partially truncated) code and file summaries, the requested download/install flow appears implemented.",
+  "missing_requirements": [],
+  "hallucinated_features": [],
+  "confidence": 0.74,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/App.tsx",
+    "frontend/src/hooks/usePwaInstallPrompt.ts",
+    "frontend/src/pages/ChatScreen.tsx",
+    "frontend/src/pages/DownloadInstallScreen.tsx",
+    "project_state.json"
+  ]
+}

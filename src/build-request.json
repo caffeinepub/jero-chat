@@ -1,0 +1,87 @@
+{
+  "kind": "build_request",
+  "title": "Add in-app download/install link (web/PWA) for Jero chat",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-7",
+      "text": "Add a new \"Download\" (or \"Install\") screen/route in the React app that provides an app link users can open and copy, plus clear install instructions for adding the web app to the home screen on Android and iOS.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-13"
+        ],
+        "quotes": [
+          "Add app download  link"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A new route (e.g., /download) exists and renders a download/install page styled consistently with the current cyber/neon theme.",
+        "The page shows the app URL derived at runtime (window.location.origin) and a \"Copy link\" action that copies the URL to the clipboard and provides a visible confirmation (toast or inline status).",
+        "The page includes user-facing English instructions for: (1) Android Chrome/Edge \"Add to Home screen\" flow, and (2) iOS Safari \"Add to Home Screen\" flow.",
+        "No text suggests an APK is being generated; the page clearly indicates this is the web app install/link option."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Add a prominent navigation entry point to the new Download/Install screen from the main chat screen header (next to the existing Premium button) and provide a back action from the Download/Install screen to return to the chat screen.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-13"
+        ],
+        "quotes": [
+          "Add app download  link"
+        ]
+      },
+      "acceptanceCriteria": [
+        "ChatScreen header includes a clearly accessible icon/button (with aria-label in English, e.g., \"Download / Install\") that navigates to the download/install route.",
+        "The Download/Install screen includes a back button that navigates back to the main chat route ('/').",
+        "Navigation works without breaking existing navigation between Chat and Premium screens."
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "If the browser supports PWA installation prompts, enhance the Download/Install screen with an \"Install\" button that triggers the native install prompt; otherwise, hide/disable the button and fall back to manual instructions.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-13"
+        ],
+        "quotes": [
+          "Add app download  link"
+        ]
+      },
+      "acceptanceCriteria": [
+        "On supported browsers, the screen displays an enabled \"Install\" button that triggers the captured beforeinstallprompt event prompt().",
+        "On unsupported browsers, the \"Install\" button is not shown or is disabled with explanatory English text directing users to manual install instructions.",
+        "Implementation does not require backend changes and does not break app rendering in non-PWA contexts."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not claim or implement APK generation within this project; the app is deployed as a web app on the Internet Computer.",
+    "Do not modify files under frontend/src/components/ui or any other paths listed as immutable in SYSTEM_CONTEXT."
+  ],
+  "nonGoals": [
+    "Generating an actual Android APK file or providing an APK binary download.",
+    "Publishing the app to Google Play Store or Apple App Store.",
+    "Adding push notifications or native mobile integrations as part of this request."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [
+      "Use English for any user-facing text."
+    ],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

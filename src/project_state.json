@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 5,
+  "summary": "Expanding \"Jero chat\" from a UI-only prototype into a v1 chat app scope including login/auth, private & group chats, media sharing, message status, notifications, profile/settings, plus exclusive CEO/Admin features and a request for an app download link (APK-style distribution).",
+  "architectural_notes": [
+    "CEO/admin login should not depend on email; use phone OTP or passkey (per selected Option 1)."
+  ],
+  "known_issues": [
+    "Image mockup generation was requested but no image was actually produced/returned.",
+    "User requested APK/download link, but current deployment is web-app only; needs packaging/distribution approach."
+  ],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-set-the-application-name-to-jero-chat-wherever-the-ui-displays-the-product-name-e-g-header-title-areas",
+      "title": "Set the application name to \"Jero chat\" wherever the UI displays the product name (e.g., header/title areas).",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-main-chat-screen-ui-that-matches-the-look-and-feel-of-the-uploaded-main-chat-preview-image-unnamed-1-jpg-cyber-neon-dark-background-chat-bubbles-left-right-and-a-bottom-message-input-bar-with-a-send-icon-button",
+      "title": "Create a main chat screen UI that matches the look-and-feel of the uploaded main chat preview image (unnamed-1.jpg): cyber/neon dark background, chat bubbles (left/right), and a bottom message input bar with a send icon/button.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-premium-features-preview-screen-ui-that-matches-the-look-and-feel-of-the-uploaded-premium-preview-image-unnamed-2-jpg-premium-user-hero-card-a-bulleted-feature-list-an-upgrade-now-call-to-action-button-and-subscription-disclaimer-text-in-english",
+      "title": "Create a premium features preview screen UI that matches the look-and-feel of the uploaded premium preview image (unnamed-2.jpg): \"Premium User\" hero card, a bulleted feature list, an \"Upgrade Now\" call-to-action button, and subscription disclaimer text in English.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-navigation-between-the-main-chat-screen-and-the-premium-preview-screen-e-g-a-header-button-icon-on-the-chat-screen-that-opens-the-premium-screen-and-a-back-action-on-the-premium-screen",
+      "title": "Add navigation between the main chat screen and the premium preview screen (e.g., a header button/icon on the chat screen that opens the premium screen, and a back action on the premium screen).",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-coherent-cyber-neon-visual-theme-across-the-app-dark-background-neon-teal-neon-purple-accents-glow-effects-consistent-typography-and-spacing-aligned-with-the-uploaded-screenshots-and-keep-it-consistent-across-both-screens",
+      "title": "Apply a coherent cyber/neon visual theme across the app (dark background, neon teal + neon purple accents, glow effects, consistent typography, and spacing) aligned with the uploaded screenshots, and keep it consistent across both screens.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-render-the-generated-static-images-from-image-requirements-from-frontend-public-assets-generated-and-use-them-in-the-ui-where-appropriate-e-g-background-hero-decoration-without-routing-images-through-the-backend",
+      "title": "Render the generated static images (from image requirements) from frontend/public/assets/generated and use them in the UI where appropriate (e.g., background/hero decoration) without routing images through the backend.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-download-or-install-screen-route-in-the-react-app-that-provides-an-app-link-users-can-open-and-copy-plus-clear-install-instructions-for-adding-the-web-app-to-the-home-screen-on-android-and-ios",
+      "title": "Add a new \"Download\" (or \"Install\") screen/route in the React app that provides an app link users can open and copy, plus clear install instructions for adding the web app to the home screen on Android and iOS.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-prominent-navigation-entry-point-to-the-new-download-install-screen-from-the-main-chat-screen-header-next-to-the-existing-premium-button-and-provide-a-back-action-from-the-download-install-screen-to-return-to-the-chat-screen",
+      "title": "Add a prominent navigation entry point to the new Download/Install screen from the main chat screen header (next to the existing Premium button) and provide a back action from the Download/Install screen to return to the chat screen.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-if-the-browser-supports-pwa-installation-prompts-enhance-the-download-install-screen-with-an-install-button-that-triggers-the-native-install-prompt-otherwise-hide-disable-the-button-and-fall-back-to-manual-instructions",
+      "title": "If the browser supports PWA installation prompts, enhance the Download/Install screen with an \"Install\" button that triggers the native install prompt; otherwise, hide/disable the button and fall back to manual instructions.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create main chat screen UI based on screenshot1.png",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add premium features preview screen UI based on screenshot2.png",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Implement v1 login & authentication (phone/OTP or passkey), including basic account creation",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add private 1:1 messaging and group chats with scrollable chat history",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Add media sharing (photos/videos/audio) and optional file sharing",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add message status indicators (Sent/Delivered/Seen ticks)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Add push notifications for new messages",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Add Profile & Settings (edit profile photo/name, notifications toggle)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add CEO/Admin system with dashboard: user management, analytics, content moderation, premium control panel, settings override, admin alerts/logs, and CEO badge",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Provide an app download link (APK/distribution option) or equivalent installable packaging flow",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Jero chat",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

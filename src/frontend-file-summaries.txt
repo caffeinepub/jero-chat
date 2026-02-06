@@ -1,0 +1,13 @@
+{
+  "frontend/src/index.css": "Global styles with cyber/neon theme using OKLCH color system (teal and purple accents), custom neon glow utilities, and dark background tokens.",
+  "frontend/tailwind.config.js": "Tailwind configuration extended with cyber/neon color palette, custom shadows, Orbitron display font, and glow animations.",
+  "frontend/src/App.tsx": "Main app component with TanStack Router setup, ThemeProvider (forced dark mode), Toaster, and routes for chat, premium, and download/install screens.",
+  "frontend/src/components/layout/NeonScaffold.tsx": "Layout wrapper component that renders the cyber circuit background image and gradient overlay for consistent theming across all screens.",
+  "frontend/src/pages/ChatScreen.tsx": "Main chat screen with header (app name, status icons, download button, premium button), scrollable message area with sample conversation, and sticky bottom input bar using local state.",
+  "frontend/src/pages/PremiumScreen.tsx": "Premium features preview screen with back navigation, premium badge hero, feature list with icons, upgrade button (placeholder toast), and subscription disclaimer.",
+  "frontend/src/components/chat/ChatBubble.tsx": "Reusable chat bubble component with incoming (left, purple glow) and outgoing (right, teal glow) variants.",
+  "frontend/src/components/chat/MessageInputBar.tsx": "Sticky bottom input bar with text input, send button using generated neon icon, and form submission handling.",
+  "frontend/src/hooks/useQueries.ts": "Placeholder file for future React Query hooks; currently empty as backend has no methods.",
+  "frontend/src/hooks/usePwaInstallPrompt.ts": "React hook that captures and manages the browser's beforeinstallprompt event, exposing whether PWA installation is available and providing a method to trigger the native install prompt.",
+  "frontend/src/pages/DownloadInstallScreen.tsx": "Download/Install screen that displays the app URL with copy functionality, conditional PWA install button, and detailed Android/iOS manual installation instructions styled with the cyber/neon theme."
+}

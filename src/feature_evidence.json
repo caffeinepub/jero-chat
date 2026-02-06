@@ -1,0 +1,62 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-a-new-download-or-install-screen-route-in-the-react-app-that-provides-an-app-link-users-can-open-and-copy-plus-clear-install-instructions-for-adding-the-web-app-to-the-home-screen-on-android-and-ios",
+      "featureTitle": "Add a new \"Download\" (or \"Install\") screen/route in the React app that provides an app link users can open and copy, plus clear install instructions for adding the web app to the home screen on Android and iOS.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/DownloadInstallScreen.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-prominent-navigation-entry-point-to-the-new-download-install-screen-from-the-main-chat-screen-header-next-to-the-existing-premium-button-and-provide-a-back-action-from-the-download-install-screen-to-return-to-the-chat-screen",
+      "featureTitle": "Add a prominent navigation entry point to the new Download/Install screen from the main chat screen header (next to the existing Premium button) and provide a back action from the Download/Install screen to return to the chat screen.",
+      "files": [
+        "frontend/src/pages/ChatScreen.tsx",
+        "frontend/src/pages/DownloadInstallScreen.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-if-the-browser-supports-pwa-installation-prompts-enhance-the-download-install-screen-with-an-install-button-that-triggers-the-native-install-prompt-otherwise-hide-disable-the-button-and-fall-back-to-manual-instructions",
+      "featureTitle": "If the browser supports PWA installation prompts, enhance the Download/Install screen with an \"Install\" button that triggers the native install prompt; otherwise, hide/disable the button and fall back to manual instructions.",
+      "files": [
+        "frontend/src/hooks/usePwaInstallPrompt.ts",
+        "frontend/src/pages/DownloadInstallScreen.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
