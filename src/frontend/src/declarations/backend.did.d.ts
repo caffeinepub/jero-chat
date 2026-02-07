@@ -10,7 +10,104 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface _SERVICE {}
+export type ExternalBlob = Uint8Array;
+export type MediaType = { 'music' : ExternalBlob } |
+  { 'video' : ExternalBlob } |
+  { 'text' : string } |
+  { 'photo' : ExternalBlob };
+export interface Message {
+  'to' : Principal,
+  'status' : MessageStatus,
+  'content' : string,
+  'from' : Principal,
+  'timestamp' : bigint,
+  'replyToId' : [] | [bigint],
+}
+export type MessageStatus = { 'seen' : null } |
+  { 'sent' : null } |
+  { 'delivered' : null };
+export interface StatusItem {
+  'id' : bigint,
+  'media' : MediaType,
+  'author' : Principal,
+  'timestamp' : bigint,
+  'caption' : string,
+  'audioTrack' : [] | [ExternalBlob],
+}
+export type Time = bigint;
+export interface UserProfile {
+  'name' : string,
+  'profilePhoto' : [] | [ExternalBlob],
+  'phoneNumber' : [] | [string],
+}
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
+export interface _CaffeineStorageCreateCertificateResult {
+  'method' : string,
+  'blob_hash' : string,
+}
+export interface _CaffeineStorageRefillInformation {
+  'proposed_top_up_amount' : [] | [bigint],
+}
+export interface _CaffeineStorageRefillResult {
+  'success' : [] | [boolean],
+  'topped_up_amount' : [] | [bigint],
+}
+export interface _SERVICE {
+  '_caffeineStorageBlobIsLive' : ActorMethod<[Uint8Array], boolean>,
+  '_caffeineStorageBlobsToDelete' : ActorMethod<[], Array<Uint8Array>>,
+  '_caffeineStorageConfirmBlobDeletion' : ActorMethod<
+    [Array<Uint8Array>],
+    undefined
+  >,
+  '_caffeineStorageCreateCertificate' : ActorMethod<
+    [string],
+    _CaffeineStorageCreateCertificateResult
+  >,
+  '_caffeineStorageRefillCashier' : ActorMethod<
+    [[] | [_CaffeineStorageRefillInformation]],
+    _CaffeineStorageRefillResult
+  >,
+  '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addContact' : ActorMethod<[Principal], undefined>,
+  'addContactByPhone' : ActorMethod<[string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'create' : ActorMethod<[], undefined>,
+  'createPublicStatus' : ActorMethod<
+    [MediaType, string, [] | [ExternalBlob]],
+    undefined
+  >,
+  'deleteStatusForAuthor' : ActorMethod<[Principal, bigint], undefined>,
+  'findUserByPhoneNumber' : ActorMethod<[string], [] | [Principal]>,
+  'getBasicUserInfo' : ActorMethod<[Principal], [] | [[Principal, string]]>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getConversationWithContact' : ActorMethod<[Principal], Array<Message>>,
+  'getStatus' : ActorMethod<[bigint], [] | [StatusItem]>,
+  'getStatusById' : ActorMethod<[bigint], [] | [StatusItem]>,
+  'getStatusesForUser' : ActorMethod<[Principal], Array<StatusItem>>,
+  'getUserBasicInfo' : ActorMethod<[Principal], [] | [[Principal, string]]>,
+  'getUserContacts' : ActorMethod<[], Array<Principal>>,
+  'getUserPresence' : ActorMethod<[], Array<[Principal, [boolean, Time]]>>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'getUserProfileInfo' : ActorMethod<[Principal], Array<[Principal, string]>>,
+  'getUserProfilePhoto' : ActorMethod<[Principal], [] | [ExternalBlob]>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'isUserOnline' : ActorMethod<[Principal], boolean>,
+  'listContactsByAuthor' : ActorMethod<[Principal], Array<Principal>>,
+  'registerUser' : ActorMethod<[string], undefined>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'setCallerProfilePhoto' : ActorMethod<[[] | [ExternalBlob]], undefined>,
+  'setUserPresence' : ActorMethod<[boolean], undefined>,
+  'storeFile' : ActorMethod<[string, ExternalBlob], undefined>,
+  'storePersistentMessage' : ActorMethod<
+    [Principal, string, [] | [bigint]],
+    undefined
+  >,
+  'updatePhoneNumber' : ActorMethod<[[] | [string]], undefined>,
+}
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
 export declare const idlFactory: IDL.InterfaceFactory;

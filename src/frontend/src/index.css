@@ -99,3 +99,83 @@
         border: 2px solid oklch(0.65 0.18 285 / 0.6);
     }
 }
+
+/* Logo Splash Animation Styles */
+@layer components {
+    .splash-overlay {
+        animation: splash-fade-in 0.3s ease-out;
+    }
+
+    .splash-logo-container {
+        opacity: 0;
+        transform: scale(0.8);
+        filter: drop-shadow(0 0 0px oklch(0.75 0.15 195 / 0));
+        transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .splash-logo-container.splash-enter {
+        opacity: 1;
+        transform: scale(1);
+        filter: drop-shadow(0 0 40px oklch(0.75 0.15 195 / 0.8))
+                drop-shadow(0 0 80px oklch(0.65 0.18 285 / 0.6));
+    }
+
+    .splash-logo-container.splash-hold {
+        opacity: 1;
+        transform: scale(1);
+        filter: drop-shadow(0 0 40px oklch(0.75 0.15 195 / 0.8))
+                drop-shadow(0 0 80px oklch(0.65 0.18 285 / 0.6));
+    }
+
+    .splash-logo-container.splash-exit {
+        opacity: 0;
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 20px oklch(0.75 0.15 195 / 0.4))
+                drop-shadow(0 0 40px oklch(0.65 0.18 285 / 0.3));
+        transition: all 0.6s ease-in;
+    }
+
+    @keyframes splash-fade-in {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .splash-logo-container {
+            transition: opacity 0.3s ease-out;
+            filter: none !important;
+        }
+
+        .splash-logo-container.splash-enter,
+        .splash-logo-container.splash-hold {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .splash-logo-container.splash-exit {
+            opacity: 0;
+            transform: scale(1);
+        }
+    }
+
+    /* Status Viewer Full-Screen Styles */
+    .status-viewer-overlay {
+        touch-action: pan-y;
+        overscroll-behavior: contain;
+    }
+
+    .status-viewer-overlay * {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .status-viewer-overlay * {
+            transition: none !important;
+            animation: none !important;
+        }
+    }
+}

@@ -1,87 +1,80 @@
 {
   "kind": "build_request",
-  "title": "Add in-app download/install link (web/PWA) for Jero chat",
+  "title": "Add last-seen timestamps and improve online/offline presence UI indicators",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-7",
-      "text": "Add a new \"Download\" (or \"Install\") screen/route in the React app that provides an app link users can open and copy, plus clear install instructions for adding the web app to the home screen on Android and iOS.",
-      "target": "frontend",
+      "id": "REQ-58",
+      "text": "Extend the Motoko backend presence system to track and expose a user’s last-seen time in addition to online/offline state.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-13"
+          "recent-messages"
         ],
         "quotes": [
-          "Add app download  link"
+          "If you want, I can now make the app show:\n• Green dot = online\n• Grey dot = offline\n• Last seen time\nJust tell me and I will add it.\nUser: Ok do it"
         ]
       },
       "acceptanceCriteria": [
-        "A new route (e.g., /download) exists and renders a download/install page styled consistently with the current cyber/neon theme.",
-        "The page shows the app URL derived at runtime (window.location.origin) and a \"Copy link\" action that copies the URL to the clipboard and provides a visible confirmation (toast or inline status).",
-        "The page includes user-facing English instructions for: (1) Android Chrome/Edge \"Add to Home screen\" flow, and (2) iOS Safari \"Add to Home Screen\" flow.",
-        "No text suggests an APK is being generated; the page clearly indicates this is the web app install/link option."
+        "Backend stores a per-user last-seen timestamp that updates whenever the user is marked online (e.g., heartbeat) and when the user is marked offline (tab hidden/unmount/logout).",
+        "Backend exposes a query API that returns both presence state and last-seen timestamp for a given Principal (and returns a sensible value when last-seen is unknown).",
+        "Existing presence checks continue to work (do not break current callers that use the existing isUserOnline query).",
+        "All backend error text (if any) remains in English."
       ]
     },
     {
-      "id": "REQ-8",
-      "text": "Add a prominent navigation entry point to the new Download/Install screen from the main chat screen header (next to the existing Premium button) and provide a back action from the Download/Install screen to return to the chat screen.",
+      "id": "REQ-59",
+      "text": "Update the React Query layer to fetch presence as a combined presence+last-seen payload and use it in the chat header, conversations list, and contacts list.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-13"
+          "recent-messages"
         ],
         "quotes": [
-          "Add app download  link"
+          "Green dot = online\n• Grey dot = offline\n• Last seen time\nJust tell me and I will add it.\nUser: Ok do it"
         ]
       },
       "acceptanceCriteria": [
-        "ChatScreen header includes a clearly accessible icon/button (with aria-label in English, e.g., \"Download / Install\") that navigates to the download/install route.",
-        "The Download/Install screen includes a back button that navigates back to the main chat route ('/').",
-        "Navigation works without breaking existing navigation between Chat and Premium screens."
+        "A new/updated React Query hook exists to retrieve a contact’s presence state plus last-seen time from the backend.",
+        "The chat header (ChatThread) uses the new presence payload and no longer relies on hardcoded or partial presence data.",
+        "ConversationsList and ContactsPanel items use the new presence payload consistently for the same contact.",
+        "Presence polling remains enabled (refresh-based updates are acceptable), and the UI updates within the existing polling interval without requiring real-time sockets."
       ]
     },
     {
-      "id": "REQ-9",
-      "text": "If the browser supports PWA installation prompts, enhance the Download/Install screen with an \"Install\" button that triggers the native install prompt; otherwise, hide/disable the button and fall back to manual instructions.",
+      "id": "REQ-60",
+      "text": "Implement the requested presence UI behavior: show a green dot when a contact is online, a grey dot when offline, and display a human-readable “Last seen …” time when offline and a last-seen timestamp is available.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-13"
+          "recent-messages"
         ],
         "quotes": [
-          "Add app download  link"
+          "Green dot = online\n• Grey dot = offline\n• Last seen time"
         ]
       },
       "acceptanceCriteria": [
-        "On supported browsers, the screen displays an enabled \"Install\" button that triggers the captured beforeinstallprompt event prompt().",
-        "On unsupported browsers, the \"Install\" button is not shown or is disabled with explanatory English text directing users to manual install instructions.",
-        "Implementation does not require backend changes and does not break app rendering in non-PWA contexts."
+        "In the chat header, a presence dot is always shown: green when online, grey when offline (do not hide the indicator when offline).",
+        "In ConversationsList and ContactsPanel, a presence dot is always shown: green when online, grey when offline.",
+        "When offline and a last-seen timestamp is available, the UI displays English text in the form “Last seen HH:MM” (or equivalent concise English) using a consistent locale/format across the app.",
+        "When offline and last-seen is not available, the UI displays “Offline” (English).",
+        "When presence info is still loading or unavailable, the UI displays a clear English fallback such as “Status unavailable”, and the dot does not incorrectly show green (online)."
       ]
     }
   ],
   "constraints": [
-    "Do not claim or implement APK generation within this project; the app is deployed as a web app on the Internet Computer.",
-    "Do not modify files under frontend/src/components/ui or any other paths listed as immutable in SYSTEM_CONTEXT."
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Do not edit any files under frontend/src/components/ui or any path listed in frontend.immutablePaths.",
+    "Use English for all user-facing text."
   ],
   "nonGoals": [
-    "Generating an actual Android APK file or providing an APK binary download.",
-    "Publishing the app to Google Play Store or Apple App Store.",
-    "Adding push notifications or native mobile integrations as part of this request."
+    "Do not implement real-time presence via WebSockets or any push mechanism.",
+    "Do not add push notifications.",
+    "Do not add a new full profile viewer screen from chat (not requested in the final user approval).",
+    "Do not redesign the overall neon theme beyond what is necessary to add the dot/last-seen UI."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [
-      "Use English for any user-facing text."
-    ],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

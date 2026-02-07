@@ -8,10 +8,326 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const idlService = IDL.Service({});
+export const _CaffeineStorageCreateCertificateResult = IDL.Record({
+  'method' : IDL.Text,
+  'blob_hash' : IDL.Text,
+});
+export const _CaffeineStorageRefillInformation = IDL.Record({
+  'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const _CaffeineStorageRefillResult = IDL.Record({
+  'success' : IDL.Opt(IDL.Bool),
+  'topped_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const MediaType = IDL.Variant({
+  'music' : ExternalBlob,
+  'video' : ExternalBlob,
+  'text' : IDL.Text,
+  'photo' : ExternalBlob,
+});
+export const UserProfile = IDL.Record({
+  'name' : IDL.Text,
+  'profilePhoto' : IDL.Opt(ExternalBlob),
+  'phoneNumber' : IDL.Opt(IDL.Text),
+});
+export const MessageStatus = IDL.Variant({
+  'seen' : IDL.Null,
+  'sent' : IDL.Null,
+  'delivered' : IDL.Null,
+});
+export const Message = IDL.Record({
+  'to' : IDL.Principal,
+  'status' : MessageStatus,
+  'content' : IDL.Text,
+  'from' : IDL.Principal,
+  'timestamp' : IDL.Nat,
+  'replyToId' : IDL.Opt(IDL.Nat),
+});
+export const StatusItem = IDL.Record({
+  'id' : IDL.Nat,
+  'media' : MediaType,
+  'author' : IDL.Principal,
+  'timestamp' : IDL.Int,
+  'caption' : IDL.Text,
+  'audioTrack' : IDL.Opt(ExternalBlob),
+});
+export const Time = IDL.Int;
+
+export const idlService = IDL.Service({
+  '_caffeineStorageBlobIsLive' : IDL.Func(
+      [IDL.Vec(IDL.Nat8)],
+      [IDL.Bool],
+      ['query'],
+    ),
+  '_caffeineStorageBlobsToDelete' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      ['query'],
+    ),
+  '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      [],
+      [],
+    ),
+  '_caffeineStorageCreateCertificate' : IDL.Func(
+      [IDL.Text],
+      [_CaffeineStorageCreateCertificateResult],
+      [],
+    ),
+  '_caffeineStorageRefillCashier' : IDL.Func(
+      [IDL.Opt(_CaffeineStorageRefillInformation)],
+      [_CaffeineStorageRefillResult],
+      [],
+    ),
+  '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addContact' : IDL.Func([IDL.Principal], [], []),
+  'addContactByPhone' : IDL.Func([IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'create' : IDL.Func([], [], ['oneway']),
+  'createPublicStatus' : IDL.Func(
+      [MediaType, IDL.Text, IDL.Opt(ExternalBlob)],
+      [],
+      [],
+    ),
+  'deleteStatusForAuthor' : IDL.Func([IDL.Principal, IDL.Nat], [], []),
+  'findUserByPhoneNumber' : IDL.Func(
+      [IDL.Text],
+      [IDL.Opt(IDL.Principal)],
+      ['query'],
+    ),
+  'getBasicUserInfo' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(IDL.Tuple(IDL.Principal, IDL.Text))],
+      ['query'],
+    ),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getConversationWithContact' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Vec(Message)],
+      ['query'],
+    ),
+  'getStatus' : IDL.Func([IDL.Nat], [IDL.Opt(StatusItem)], ['query']),
+  'getStatusById' : IDL.Func([IDL.Nat], [IDL.Opt(StatusItem)], ['query']),
+  'getStatusesForUser' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Vec(StatusItem)],
+      ['query'],
+    ),
+  'getUserBasicInfo' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(IDL.Tuple(IDL.Principal, IDL.Text))],
+      ['query'],
+    ),
+  'getUserContacts' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+  'getUserPresence' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Tuple(IDL.Bool, Time)))],
+      ['query'],
+    ),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'getUserProfileInfo' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Text))],
+      ['query'],
+    ),
+  'getUserProfilePhoto' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(ExternalBlob)],
+      ['query'],
+    ),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'isUserOnline' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),
+  'listContactsByAuthor' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Vec(IDL.Principal)],
+      ['query'],
+    ),
+  'registerUser' : IDL.Func([IDL.Text], [], []),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'setCallerProfilePhoto' : IDL.Func([IDL.Opt(ExternalBlob)], [], []),
+  'setUserPresence' : IDL.Func([IDL.Bool], [], []),
+  'storeFile' : IDL.Func([IDL.Text, ExternalBlob], [], []),
+  'storePersistentMessage' : IDL.Func(
+      [IDL.Principal, IDL.Text, IDL.Opt(IDL.Nat)],
+      [],
+      [],
+    ),
+  'updatePhoneNumber' : IDL.Func([IDL.Opt(IDL.Text)], [], []),
+});
 
 export const idlInitArgs = [];
 
-export const idlFactory = ({ IDL }) => { return IDL.Service({}); };
+export const idlFactory = ({ IDL }) => {
+  const _CaffeineStorageCreateCertificateResult = IDL.Record({
+    'method' : IDL.Text,
+    'blob_hash' : IDL.Text,
+  });
+  const _CaffeineStorageRefillInformation = IDL.Record({
+    'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const _CaffeineStorageRefillResult = IDL.Record({
+    'success' : IDL.Opt(IDL.Bool),
+    'topped_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const MediaType = IDL.Variant({
+    'music' : ExternalBlob,
+    'video' : ExternalBlob,
+    'text' : IDL.Text,
+    'photo' : ExternalBlob,
+  });
+  const UserProfile = IDL.Record({
+    'name' : IDL.Text,
+    'profilePhoto' : IDL.Opt(ExternalBlob),
+    'phoneNumber' : IDL.Opt(IDL.Text),
+  });
+  const MessageStatus = IDL.Variant({
+    'seen' : IDL.Null,
+    'sent' : IDL.Null,
+    'delivered' : IDL.Null,
+  });
+  const Message = IDL.Record({
+    'to' : IDL.Principal,
+    'status' : MessageStatus,
+    'content' : IDL.Text,
+    'from' : IDL.Principal,
+    'timestamp' : IDL.Nat,
+    'replyToId' : IDL.Opt(IDL.Nat),
+  });
+  const StatusItem = IDL.Record({
+    'id' : IDL.Nat,
+    'media' : MediaType,
+    'author' : IDL.Principal,
+    'timestamp' : IDL.Int,
+    'caption' : IDL.Text,
+    'audioTrack' : IDL.Opt(ExternalBlob),
+  });
+  const Time = IDL.Int;
+  
+  return IDL.Service({
+    '_caffeineStorageBlobIsLive' : IDL.Func(
+        [IDL.Vec(IDL.Nat8)],
+        [IDL.Bool],
+        ['query'],
+      ),
+    '_caffeineStorageBlobsToDelete' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        ['query'],
+      ),
+    '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        [],
+        [],
+      ),
+    '_caffeineStorageCreateCertificate' : IDL.Func(
+        [IDL.Text],
+        [_CaffeineStorageCreateCertificateResult],
+        [],
+      ),
+    '_caffeineStorageRefillCashier' : IDL.Func(
+        [IDL.Opt(_CaffeineStorageRefillInformation)],
+        [_CaffeineStorageRefillResult],
+        [],
+      ),
+    '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addContact' : IDL.Func([IDL.Principal], [], []),
+    'addContactByPhone' : IDL.Func([IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'create' : IDL.Func([], [], ['oneway']),
+    'createPublicStatus' : IDL.Func(
+        [MediaType, IDL.Text, IDL.Opt(ExternalBlob)],
+        [],
+        [],
+      ),
+    'deleteStatusForAuthor' : IDL.Func([IDL.Principal, IDL.Nat], [], []),
+    'findUserByPhoneNumber' : IDL.Func(
+        [IDL.Text],
+        [IDL.Opt(IDL.Principal)],
+        ['query'],
+      ),
+    'getBasicUserInfo' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(IDL.Tuple(IDL.Principal, IDL.Text))],
+        ['query'],
+      ),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getConversationWithContact' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Vec(Message)],
+        ['query'],
+      ),
+    'getStatus' : IDL.Func([IDL.Nat], [IDL.Opt(StatusItem)], ['query']),
+    'getStatusById' : IDL.Func([IDL.Nat], [IDL.Opt(StatusItem)], ['query']),
+    'getStatusesForUser' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Vec(StatusItem)],
+        ['query'],
+      ),
+    'getUserBasicInfo' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(IDL.Tuple(IDL.Principal, IDL.Text))],
+        ['query'],
+      ),
+    'getUserContacts' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+    'getUserPresence' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Tuple(IDL.Bool, Time)))],
+        ['query'],
+      ),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'getUserProfileInfo' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Text))],
+        ['query'],
+      ),
+    'getUserProfilePhoto' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(ExternalBlob)],
+        ['query'],
+      ),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'isUserOnline' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),
+    'listContactsByAuthor' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Vec(IDL.Principal)],
+        ['query'],
+      ),
+    'registerUser' : IDL.Func([IDL.Text], [], []),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'setCallerProfilePhoto' : IDL.Func([IDL.Opt(ExternalBlob)], [], []),
+    'setUserPresence' : IDL.Func([IDL.Bool], [], []),
+    'storeFile' : IDL.Func([IDL.Text, ExternalBlob], [], []),
+    'storePersistentMessage' : IDL.Func(
+        [IDL.Principal, IDL.Text, IDL.Opt(IDL.Nat)],
+        [],
+        [],
+      ),
+    'updatePhoneNumber' : IDL.Func([IDL.Opt(IDL.Text)], [], []),
+  });
+};
 
 export const init = ({ IDL }) => { return []; };

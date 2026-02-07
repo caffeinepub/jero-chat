@@ -1,69 +1,80 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Download/Install route with copy link and PWA install prompt support",
+  "title": "Presence last-seen + improved online/offline indicators (frontend)",
   "requirements": [
     {
-      "id": "REQ-7",
-      "summary": "Create a new Download/Install screen that shows the runtime app link, supports copying it, and provides clear Android/iOS home-screen install instructions in English.",
+      "id": "REQ-59",
+      "summary": "Update React Query presence fetching to use a combined presence+last-seen payload and consume it consistently across chat header, conversations list, and contacts list with polling.",
       "acceptanceCriteria": [
-        "A new route (e.g., /download) exists and renders a download/install page styled consistently with the current cyber/neon theme.",
-        "The page shows the app URL derived at runtime (window.location.origin) and a \"Copy link\" action that copies the URL to the clipboard and provides a visible confirmation (toast or inline status).",
-        "The page includes user-facing English instructions for: (1) Android Chrome/Edge \"Add to Home screen\" flow, and (2) iOS Safari \"Add to Home Screen\" flow.",
-        "No text suggests an APK is being generated; the page clearly indicates this is the web app install/link option."
+        "A new/updated React Query hook exists to retrieve a contact’s presence state plus last-seen time from the backend.",
+        "The chat header (ChatThread) uses the new presence payload and no longer relies on hardcoded or partial presence data.",
+        "ConversationsList and ContactsPanel items use the new presence payload consistently for the same contact.",
+        "Presence polling remains enabled (refresh-based updates are acceptable), and the UI updates within the existing polling interval without requiring real-time sockets."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/DownloadInstallScreen.tsx",
-          "operation": "create",
-          "description": "Implement the /download Download/Install screen UI using the existing neon/cyber styling conventions; derive and display the app URL from window.location.origin, add a \"Copy link\" action using the Clipboard API, and show clear English Android/iOS \"Add to Home Screen\" instructions that explicitly describe this as a web app install/link option (no APK language). Use shadcn-ui's Sonner toast (already present in the app) for copy confirmation messaging; verify the component's usage instructions before implementing."
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Replace/extend the presence query layer to return a combined payload (isOnline + lastSeen timestamp) rather than a bare boolean, using the backend presence capability that returns presence plus a timestamp; keep polling enabled and ensure query keys are consistent to avoid duplicated inconsistent presence results across different lists."
         },
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/chat/ChatThread.tsx",
           "operation": "modify",
-          "description": "Register and wire a new TanStack Router route for /download that renders DownloadInstallScreen, keeping existing chat and premium navigation intact."
+          "description": "Switch chat header presence consumption from the boolean-only hook to the new combined presence payload, using a single derived presence source for the selected contact so the header stays consistent with list views during polling refreshes."
+        },
+        {
+          "path": "frontend/src/components/conversations/ConversationsList.tsx",
+          "operation": "modify",
+          "description": "Update conversation items to use the new combined presence payload (isOnline + lastSeen) instead of the boolean-only presence hook so list indicators/text stay consistent with the chat header and contacts list."
+        },
+        {
+          "path": "frontend/src/components/contacts/ContactsPanel.tsx",
+          "operation": "modify",
+          "description": "Update contact items to use the new combined presence payload (isOnline + lastSeen) instead of the boolean-only presence hook so list indicators/text stay consistent with the chat header and conversations list."
         }
       ]
     },
     {
-      "id": "REQ-8",
-      "summary": "Add a prominent navigation entry from the Chat header to the Download/Install screen and include a back action on the Download/Install screen to return to chat.",
+      "id": "REQ-60",
+      "summary": "Implement presence UI: always show green/grey dot, and show human-readable last-seen text when offline with fallback states in English.",
       "acceptanceCriteria": [
-        "ChatScreen header includes a clearly accessible icon/button (with aria-label in English, e.g., \"Download / Install\") that navigates to the download/install route.",
-        "The Download/Install screen includes a back button that navigates back to the main chat route ('/').",
-        "Navigation works without breaking existing navigation between Chat and Premium screens."
+        "In the chat header, a presence dot is always shown: green when online, grey when offline (do not hide the indicator when offline).",
+        "In ConversationsList and ContactsPanel, a presence dot is always shown: green when online, grey when offline.",
+        "When offline and a last-seen timestamp is available, the UI displays English text in the form “Last seen HH:MM” (or equivalent concise English) using a consistent locale/format across the app.",
+        "When offline and last-seen is not available, the UI displays “Offline” (English).",
+        "When presence info is still loading or unavailable, the UI displays a clear English fallback such as “Status unavailable”, and the dot does not incorrectly show green (online)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/ChatScreen.tsx",
-          "operation": "modify",
-          "description": "Add a new header icon/button placed next to the existing Premium button that navigates to /download; include an English aria-label such as \"Download / Install\" and keep the current header layout/styling consistent with the neon theme."
-        },
-        {
-          "path": "frontend/src/pages/DownloadInstallScreen.tsx",
-          "operation": "modify",
-          "description": "Add a back button in the screen header that navigates to '/' (main chat), matching the existing header/back interaction pattern used on PremiumScreen."
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Enhance the Download/Install screen with a conditional PWA Install button that triggers the native install prompt when supported, otherwise fall back to manual instructions.",
-      "acceptanceCriteria": [
-        "On supported browsers, the screen displays an enabled \"Install\" button that triggers the captured beforeinstallprompt event prompt().",
-        "On unsupported browsers, the \"Install\" button is not shown or is disabled with explanatory English text directing users to manual install instructions.",
-        "Implementation does not require backend changes and does not break app rendering in non-PWA contexts."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/usePwaInstallPrompt.ts",
+          "path": "frontend/src/utils/formatLastSeen.ts",
           "operation": "create",
-          "description": "Create a small React hook to capture and manage the browser beforeinstallprompt event, expose whether an install prompt is available, and provide an action to trigger prompt() safely (no backend involvement)."
+          "description": "Add a small utility to convert the backend-provided timestamp into a consistent English \"Last seen HH:MM\" string (using a single chosen locale/format across the app) and to gracefully handle unknown/unset timestamps."
         },
         {
-          "path": "frontend/src/pages/DownloadInstallScreen.tsx",
+          "path": "frontend/src/components/presence/PresenceDot.tsx",
+          "operation": "create",
+          "description": "Create a reusable presence dot component that always renders (green when online, grey when offline/unknown) to ensure consistent indicator behavior across ChatThread, ConversationsList, and ContactsPanel."
+        },
+        {
+          "path": "frontend/src/components/presence/PresenceStatusText.tsx",
+          "operation": "create",
+          "description": "Create a small reusable status text component/helper that displays: \"Online\" when online, \"Last seen HH:MM\" when offline with a known timestamp, \"Offline\" when offline without timestamp, and \"Status unavailable\" when loading/unavailable; keep all user-facing text in English."
+        },
+        {
+          "path": "frontend/src/components/chat/ChatThread.tsx",
           "operation": "modify",
-          "description": "Use the PWA install prompt hook to conditionally render an enabled \"Install\" button when available; otherwise hide/disable it and show a short English explanation directing users to the manual Android/iOS instructions. Use shadcn-ui's Sonner toast (already present in the app) for optional success/cancel feedback if desired; verify the component's usage instructions before implementing."
+          "description": "Update the chat header UI to always show the presence dot (green/grey) and display the correct English status text using the combined presence payload; ensure that loading/unavailable presence never shows a green (online) dot and instead shows the fallback text."
+        },
+        {
+          "path": "frontend/src/components/conversations/ConversationsList.tsx",
+          "operation": "modify",
+          "description": "Update conversation row UI so the presence dot is always visible (green when online, grey when offline/unknown) and the status line uses the consistent English rules for online/offline/last-seen/unavailable."
+        },
+        {
+          "path": "frontend/src/components/contacts/ContactsPanel.tsx",
+          "operation": "modify",
+          "description": "Update contact row UI so the presence dot is always visible (green when online, grey when offline/unknown) and the right-side/secondary status text uses the consistent English rules for online/offline/last-seen/unavailable."
         }
       ]
     }

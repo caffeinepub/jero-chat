@@ -1,14 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Add a dedicated Download/Install page to Jero chat so users can copy the app link and follow clear PWA install instructions on Android and iOS.
+**Goal:** Add last-seen timestamps to presence and improve online/offline UI indicators across the chat app.
 
 **Planned changes:**
-- Add a new React route (e.g., `/download`) that renders a Download/Install screen styled consistently with the existing cyber/neon theme.
-- Display the app URL derived at runtime from `window.location.origin`, with a “Copy link” action and a visible confirmation message.
-- Add English user instructions for installing the web app to the home screen on Android (Chrome/Edge) and iOS (Safari), explicitly clarifying this is not an APK download.
-- Add a prominent header navigation button on the main Chat screen (next to Premium) that links to the Download/Install screen (with an English aria-label).
-- Add a back action on the Download/Install screen that returns to the main chat route (`/`) without disrupting existing Chat/Premium navigation.
-- Enhance the Download/Install screen with an “Install” button that triggers the native PWA install prompt when supported; otherwise hide/disable it with English guidance to use manual instructions.
+- Extend the Motoko presence backend to store and expose per-user last-seen timestamps alongside online/offline state, without breaking existing presence queries.
+- Update the React Query data layer to fetch a combined presence + last-seen payload and reuse it consistently in ChatThread header, ConversationsList, and ContactsPanel.
+- Adjust presence UI to always show a dot (green online, grey offline) and display “Last seen …” when offline with a known timestamp, with clear English fallbacks when unknown/unavailable.
 
-**User-visible outcome:** Users can open a new Download/Install page from the chat header to copy the app link, see Android/iOS “Add to Home Screen” instructions, and (when supported) install the PWA via a native prompt, then return back to chat.
+**User-visible outcome:** Users see a consistent green/grey presence dot everywhere, and when someone is offline the app shows “Last seen …” (or “Offline”/“Status unavailable” when appropriate).

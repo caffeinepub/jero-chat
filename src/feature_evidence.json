@@ -2,59 +2,50 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-new-download-or-install-screen-route-in-the-react-app-that-provides-an-app-link-users-can-open-and-copy-plus-clear-install-instructions-for-adding-the-web-app-to-the-home-screen-on-android-and-ios",
-      "featureTitle": "Add a new \"Download\" (or \"Install\") screen/route in the React app that provides an app link users can open and copy, plus clear install instructions for adding the web app to the home screen on Android and iOS.",
+      "featureId": "feature-update-the-react-query-layer-to-fetch-presence-as-a-combined-presence-last-seen-payload-and-use-it-in-the-chat-header-conversations-list-and-contacts-list",
+      "featureTitle": "Update the React Query layer to fetch presence as a combined presence+last-seen payload and use it in the chat header, conversations list, and contacts list.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/DownloadInstallScreen.tsx"
+        "frontend/src/components/chat/ChatThread.tsx",
+        "frontend/src/components/contacts/ContactsPanel.tsx",
+        "frontend/src/components/conversations/ConversationsList.tsx",
+        "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-7"
+        "REQ-59"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-prominent-navigation-entry-point-to-the-new-download-install-screen-from-the-main-chat-screen-header-next-to-the-existing-premium-button-and-provide-a-back-action-from-the-download-install-screen-to-return-to-the-chat-screen",
-      "featureTitle": "Add a prominent navigation entry point to the new Download/Install screen from the main chat screen header (next to the existing Premium button) and provide a back action from the Download/Install screen to return to the chat screen.",
+      "featureId": "feature-implement-the-requested-presence-ui-behavior-show-a-green-dot-when-a-contact-is-online-a-grey-dot-when-offline-and-display-a-human-readable-last-seen-time-when-offline-and-a-last-seen-timestamp-is-available",
+      "featureTitle": "Implement the requested presence UI behavior: show a green dot when a contact is online, a grey dot when offline, and display a human-readable “Last seen …” time when offline and a last-seen timestamp is available.",
       "files": [
-        "frontend/src/pages/ChatScreen.tsx",
-        "frontend/src/pages/DownloadInstallScreen.tsx"
+        "frontend/src/components/chat/ChatThread.tsx",
+        "frontend/src/components/contacts/ContactsPanel.tsx",
+        "frontend/src/components/conversations/ConversationsList.tsx",
+        "frontend/src/components/presence/PresenceDot.tsx",
+        "frontend/src/components/presence/PresenceStatusText.tsx",
+        "frontend/src/utils/formatLastSeen.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-if-the-browser-supports-pwa-installation-prompts-enhance-the-download-install-screen-with-an-install-button-that-triggers-the-native-install-prompt-otherwise-hide-disable-the-button-and-fall-back-to-manual-instructions",
-      "featureTitle": "If the browser supports PWA installation prompts, enhance the Download/Install screen with an \"Install\" button that triggers the native install prompt; otherwise, hide/disable the button and fall back to manual instructions.",
-      "files": [
-        "frontend/src/hooks/usePwaInstallPrompt.ts",
-        "frontend/src/pages/DownloadInstallScreen.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
+        "REQ-60"
       ],
       "confidence": "high"
     }

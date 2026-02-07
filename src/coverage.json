@@ -1,66 +1,80 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T14:02:44.908Z",
+  "generatedAt": "2026-02-06T17:18:31.542Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 3,
-    "implemented": 3,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-7",
-        "summary": "Add a new \"Download\" (or \"Install\") screen/route in the React app that provides an app link users can open and copy, plus clear install instructions for adding the web app to the home screen on Android and iOS.",
+        "id": "REQ-58",
+        "summary": "Extend the Motoko backend presence system to track and expose a user’s last-seen time in addition to online/offline state.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-59",
+        "summary": "Update the React Query layer to fetch presence as a combined presence+last-seen payload and use it in the chat header, conversations list, and contacts list.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/DownloadInstallScreen.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/chat/ChatThread.tsx",
+          "frontend/src/components/conversations/ConversationsList.tsx",
+          "frontend/src/components/contacts/ContactsPanel.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/DownloadInstallScreen.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/chat/ChatThread.tsx",
+          "frontend/src/components/conversations/ConversationsList.tsx",
+          "frontend/src/components/contacts/ContactsPanel.tsx"
         ]
       },
       {
-        "id": "REQ-8",
-        "summary": "Add a prominent navigation entry point to the new Download/Install screen from the main chat screen header (next to the existing Premium button) and provide a back action from the Download/Install screen to return to the chat screen.",
+        "id": "REQ-60",
+        "summary": "Implement the requested presence UI behavior: show a green dot when a contact is online, a grey dot when offline, and display a human-readable “Last seen …” time when offline and a last-seen timestamp is available.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/ChatScreen.tsx",
-          "frontend/src/pages/DownloadInstallScreen.tsx"
+          "frontend/src/utils/formatLastSeen.ts",
+          "frontend/src/components/presence/PresenceDot.tsx",
+          "frontend/src/components/presence/PresenceStatusText.tsx",
+          "frontend/src/components/chat/ChatThread.tsx",
+          "frontend/src/components/conversations/ConversationsList.tsx",
+          "frontend/src/components/contacts/ContactsPanel.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/ChatScreen.tsx",
-          "frontend/src/pages/DownloadInstallScreen.tsx"
-        ]
-      },
-      {
-        "id": "REQ-9",
-        "summary": "If the browser supports PWA installation prompts, enhance the Download/Install screen with an \"Install\" button that triggers the native install prompt; otherwise, hide/disable the button and fall back to manual instructions.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/usePwaInstallPrompt.ts",
-          "frontend/src/pages/DownloadInstallScreen.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/usePwaInstallPrompt.ts",
-          "frontend/src/pages/DownloadInstallScreen.tsx"
+          "frontend/src/utils/formatLastSeen.ts",
+          "frontend/src/components/presence/PresenceDot.tsx",
+          "frontend/src/components/presence/PresenceStatusText.tsx",
+          "frontend/src/components/chat/ChatThread.tsx",
+          "frontend/src/components/conversations/ConversationsList.tsx",
+          "frontend/src/components/contacts/ContactsPanel.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/hooks/usePwaInstallPrompt.ts",
-    "frontend/src/pages/ChatScreen.tsx",
-    "frontend/src/pages/DownloadInstallScreen.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/chat/ChatThread.tsx",
+    "frontend/src/components/contacts/ContactsPanel.tsx",
+    "frontend/src/components/conversations/ConversationsList.tsx",
+    "frontend/src/components/presence/PresenceDot.tsx",
+    "frontend/src/components/presence/PresenceStatusText.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/utils/formatLastSeen.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

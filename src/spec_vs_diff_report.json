@@ -1,17 +1,67 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T14:02:44.906Z",
-  "summary": "Diff adds a new /download route with a DownloadInstallScreen, adds a header navigation button in ChatScreen, and implements a PWA install prompt hook plus copy-link behavior with toast feedback. Based on the provided (partially truncated) code and file summaries, the requested download/install flow appears implemented.",
-  "missing_requirements": [],
-  "hallucinated_features": [],
-  "confidence": 0.74,
+  "generatedAt": "2026-02-06T17:18:31.538Z",
+  "summary": "Diff adds frontend presence UI components (dot + status text) and updates ChatThread/ContactsPanel/ConversationsList to consume a combined presence payload (isOnline + lastSeen) via useGetUserPresence. Backend state type for presence is changed to store (Bool, Time) and an upgrade migration module is added. However, the diff summary does not show the backend APIs and update logic required to actually set and expose last-seen timestamps, nor does it show the React Query hook implementation/polling details.",
+  "missing_requirements": [
+    {
+      "id": "REQ-58",
+      "requirement": "Backend stores and updates a per-user last-seen timestamp whenever the user is marked online and when marked offline.",
+      "reason": "Although userPresence is changed to Map<Principal, (Bool, Time.Time)>, the diff excerpt does not show any logic where lastSeen is updated on heartbeat/online or offline transitions (tab hidden/unmount/logout).",
+      "evidence": [
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-58",
+      "requirement": "Backend exposes a query API that returns both presence state and last-seen timestamp for a given Principal (with sensible value when unknown).",
+      "reason": "No presence query function (e.g., getUserPresence) is visible in the backend/main.mo excerpt; only the state type change and migration are shown.",
+      "evidence": [
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-58",
+      "requirement": "Existing presence checks continue to work (do not break callers using existing isUserOnline query).",
+      "reason": "The diff summary does not show the existing isUserOnline query implementation or any compatibility layer; cannot verify it remains unchanged/working.",
+      "evidence": [
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-59",
+      "requirement": "React Query layer has a new/updated hook to retrieve combined presence+last-seen payload from the backend, with polling enabled.",
+      "reason": "Components import and call useGetUserPresence, but the hook’s implementation (including backend method used and polling interval) is not visible in the truncated useQueries.ts diff excerpt.",
+      "evidence": [
+        "frontend/src/hooks/useQueries.ts (truncated)",
+        "frontend/src/components/chat/ChatThread.tsx (truncated)",
+        "frontend/src/components/contacts/ContactsPanel.tsx",
+        "frontend/src/components/conversations/ConversationsList.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Added a backend upgrade migration module to transform userPresence from Map<Principal, Bool> to Map<Principal, (Bool, Time.Time)>.",
+      "reason": "REQ-58/59/60 do not request adding a migration file/module; it may be useful but is not explicitly required by the BuildRequest.",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo (truncated)"
+      ]
+    }
+  ],
+  "confidence": 0.62,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/hooks/usePwaInstallPrompt.ts",
-    "frontend/src/pages/ChatScreen.tsx",
-    "frontend/src/pages/DownloadInstallScreen.tsx",
+    "frontend/src/components/chat/ChatThread.tsx",
+    "frontend/src/components/contacts/ContactsPanel.tsx",
+    "frontend/src/components/conversations/ConversationsList.tsx",
+    "frontend/src/components/presence/PresenceDot.tsx",
+    "frontend/src/components/presence/PresenceStatusText.tsx",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/utils/formatLastSeen.ts",
     "project_state.json"
   ]
 }

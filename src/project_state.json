@@ -1,13 +1,26 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
-  "summary": "Expanding \"Jero chat\" from a UI-only prototype into a v1 chat app scope including login/auth, private & group chats, media sharing, message status, notifications, profile/settings, plus exclusive CEO/Admin features and a request for an app download link (APK-style distribution).",
+  "projectStateVersion": 35,
+  "summary": "Expanding \"Jero chat\" from a UI-only prototype into a v1 chat app scope including login/auth (login shown first), contacts/friends to start chats, private & group chats, media/file sharing, message status, notifications, profile/settings, WhatsApp-like audio/video calling, plus a WhatsApp/Instagram-like \"Status/Stories\" feature (viewing behavior, audience visibility rules, and allowed post types), exclusive CEO/Admin features and an install/download flow.",
   "architectural_notes": [
-    "CEO/admin login should not depend on email; use phone OTP or passkey (per selected Option 1)."
+    "CEO/admin login should not depend on email; use phone OTP or passkey (per selected Option 1).",
+    "Attachment upload limits cannot be truly unlimited on Internet Computer; user requested a 1 GB max limit, which may exceed canister/message/storage constraints and likely requires alternative storage/chunking strategy.",
+    "Clarify and enforce profile photo upload constraints: user requested a 100 MP (megapixel) limit; may require client-side validation (image decode to read dimensions/MP) and corresponding backend checks if images are stored/processed server-side.",
+    "Status/Stories currently disallow audio statuses; adding “music for post” conflicts with existing allowed post types and needs a clarified rule (e.g., background music allowed on photo/video vs. standalone audio status).",
+    "Adding “music from online” requires defining source type (URL vs catalog/search), streaming/playback approach, and addressing licensing/availability; may need storing only a link/metadata rather than uploading audio.",
+    "Presence/online status requires a definition and mechanism (e.g., heartbeat/last-seen timestamp with TTL) since Internet Computer canisters do not provide automatic real-time presence; decide polling interval and what counts as “online” vs “offline/last seen”.",
+    "Clarify expected navigation: after adding/selecting a contact, app should open the chat thread and remain on the chat page with persisted history loaded.",
+    "Define and implement “Last seen” semantics for web presence (timestamp update rules, inactivity timeout/TTL, privacy/visibility) and how it’s computed from activity/requests."
   ],
   "known_issues": [
     "Image mockup generation was requested but no image was actually produced/returned.",
-    "User requested APK/download link, but current deployment is web-app only; needs packaging/distribution approach."
+    "User requested APK/download link, but current deployment is web-app only; needs packaging/distribution approach.",
+    "Recent build attempt failed/\"didn’t go through\"; needs retry with simplified scope or diagnosis.",
+    "User requested increasing attachment max file size limit to 1 GB; may be infeasible on current Internet Computer backend without major changes (e.g., chunking/external storage).",
+    "Profile screen: Save button is not working (profile changes are not being saved).",
+    "After adding a contact (by principal ID or phone), the app does not navigate/move to the chat page as expected.",
+    "Online status indicator shows users as offline even when they are actively online on the web app.",
+    "Chat history is not consistently shown/persisted when staying in a chat thread (needs verification against expected persisted history behavior)."
   ],
   "isFixRequest": false,
   "existing_features": [
@@ -82,6 +95,302 @@
         "REQ-9"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-an-authentication-first-app-flow-so-users-see-a-dedicated-login-screen-before-any-chat-ui-using-the-existing-internet-identity-provider-block-access-to-chat-related-routes-when-the-user-is-not-authenticated-and-provide-a-clear-logout-action-when-authenticated",
+      "title": "Add an authentication-first app flow so users see a dedicated Login screen before any chat UI, using the existing Internet Identity provider; block access to chat-related routes when the user is not authenticated and provide a clear Logout action when authenticated.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-contacts-friends-feature-that-lets-an-authenticated-user-add-and-manage-contacts-and-start-a-conversation-with-a-selected-contact",
+      "title": "Add a Contacts/Friends feature that lets an authenticated user add and manage contacts and start a conversation with a selected contact.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-conversations-list-ui-whatsapp-style-entry-point-and-support-private-1-1-messaging-with-persisted-history-update-the-existing-chatscreen-so-it-displays-real-messages-from-the-selected-conversation-instead-of-hardcoded-demo-messages",
+      "title": "Add a Conversations list UI (WhatsApp-style entry point) and support private 1:1 messaging with persisted history; update the existing ChatScreen so it displays real messages from the selected conversation instead of hardcoded demo messages.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-basic-message-delivery-read-status-indicators-e-g-sent-delivered-seen-ticks-and-expose-the-minimal-backend-fields-needed-to-compute-display-them-without-real-time-sockets-polling-refresh-based-updates-are-acceptable",
+      "title": "Add basic message delivery/read status indicators (e.g., Sent/Delivered/Seen ticks) and expose the minimal backend fields needed to compute/display them without real-time sockets (polling/refresh-based updates are acceptable).",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-file-media-sharing-in-chats-allow-a-user-to-attach-and-send-a-small-file-at-minimum-images-as-part-of-a-message-store-it-in-the-backend-and-render-it-in-the-chat-thread-enforce-reasonable-size-limits-and-show-user-friendly-errors-in-english-when-exceeded",
+      "title": "Add file/media sharing in chats: allow a user to attach and send a small file (at minimum: images) as part of a message, store it in the backend, and render it in the chat thread; enforce reasonable size limits and show user-friendly errors in English when exceeded.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-whatsapp-style-calling-entry-points-audio-call-and-video-call-buttons-in-the-chat-ui-as-non-functional-placeholders-for-now-clearly-labeled-as-not-available-in-the-current-web-build",
+      "title": "Add WhatsApp-style calling entry points (audio call and video call buttons) in the chat UI as non-functional placeholders for now, clearly labeled as not available in the current web build.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-contacts-ui-to-let-users-add-friends-by-phone-number-international-all-regions-in-addition-to-principal-id-and-clearly-explain-the-required-format-in-english",
+      "title": "Update the Contacts UI to let users add friends by phone number (international/all regions) in addition to principal ID, and clearly explain the required format in English.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-explicit-admin-entry-point-and-an-admin-help-screen-that-explains-how-admins-log-in-using-internet-identity-and-what-the-admin-id-is-the-admin-s-principal-and-display-the-caller-s-principal-on-that-screen-for-copy-paste",
+      "title": "Add an explicit Admin entry point and an Admin Help screen that explains how admins log in (using Internet Identity) and what the “admin id” is (the admin’s principal), and display the caller’s principal on that screen for copy/paste.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-expose-a-minimal-backend-query-that-allows-the-frontend-to-determine-whether-the-current-caller-is-an-admin-and-use-it-to-conditionally-show-an-admin-button-link-in-the-main-header",
+      "title": "Expose a minimal backend query that allows the frontend to determine whether the current caller is an admin, and use it to conditionally show an Admin button/link in the main header.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-app-logo-branding-using-the-uploaded-jero-chat-logo-image-show-the-logo-on-the-login-screen-and-in-the-chatscreen-header-and-ensure-it-fits-the-existing-neon-cyber-theme",
+      "title": "Add app logo branding using the uploaded Jero Chat logo image: show the logo on the Login screen and in the ChatScreen header, and ensure it fits the existing neon/cyber theme.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-the-login-screen-visually-more-prominent-and-immediately-understandable-as-the-entry-point-to-the-app-by-strengthening-its-hierarchy-logo-title-headline-primary-call-to-action-and-adding-clear-explanatory-copy-that-login-is-done-via-internet-identity-passkey-biometrics-rather-than-email-sms",
+      "title": "Make the Login screen visually more prominent and immediately understandable as the entry point to the app by strengthening its hierarchy (logo/title, headline, primary call-to-action) and adding clear explanatory copy that login is done via Internet Identity (passkey/biometrics) rather than email/SMS.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-optional-login-by-phone-number-profile-field-not-authentication-so-an-authenticated-user-can-save-a-phone-number-to-their-profile-in-international-format-e-164-style-e-g-14155552671-with-clear-english-helper-text-stating-it-is-for-profile-contacts-only-and-not-used-to-sign-in",
+      "title": "Add an optional “Login by phone number” profile field (not authentication) so an authenticated user can save a phone number to their profile in international format (E.164-style, e.g., +14155552671), with clear English helper text stating it is for profile/contacts only and not used to sign in.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-full-screen-logo-splash-action-sequence-that-plays-when-the-web-app-is-opened-showing-the-existing-jero-chat-logo-in-an-animated-sequence-before-revealing-the-next-screen-login-when-unauthenticated-chat-when-authenticated",
+      "title": "Add a full-screen logo splash \"action sequence\" that plays when the web app is opened, showing the existing Jero Chat logo in an animated sequence before revealing the next screen (Login when unauthenticated, Chat when authenticated).",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-authenticated-profile-screen-route-that-lets-the-current-logged-in-user-view-and-edit-their-profile-details-name-and-optional-phone-number-and-save-changes-to-the-backend",
+      "title": "Add a new authenticated Profile screen/route that lets the current logged-in user view and edit their profile details (name and optional phone number) and save changes to the backend.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-clear-navigation-entry-point-to-the-new-profile-screen-from-the-main-chatscreen-header-and-provide-a-back-action-from-the-profile-screen-to-return-to-the-main-chat",
+      "title": "Add a clear navigation entry point to the new Profile screen from the main ChatScreen header, and provide a back action from the Profile screen to return to the main chat.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-on-the-profile-screen-display-the-current-caller-s-principal-id-with-a-one-click-copy-to-clipboard-action-and-user-feedback",
+      "title": "On the Profile screen, display the current caller’s Principal ID with a one-click copy-to-clipboard action and user feedback.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-authenticated-page-route-for-adding-or-changing-the-user-s-profile-photo-and-add-navigation-to-it-from-the-existing-profile-screen",
+      "title": "Create a new authenticated page/route for adding or changing the user’s profile photo, and add navigation to it from the existing Profile screen.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-the-user-s-profile-photo-or-a-consistent-fallback-avatar-in-relevant-ui-locations-and-keep-it-in-sync-after-updates",
+      "title": "Display the user’s profile photo (or a consistent fallback avatar) in relevant UI locations, and keep it in sync after updates.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-increase-the-maximum-allowed-chat-attachment-file-size-to-1-gb-1-073-741-824-bytes-in-the-chat-message-attachment-picker-validator-and-update-all-related-user-facing-error-text-to-clearly-state-the-new-1-gb-limit-in-english",
+      "title": "Increase the maximum allowed chat attachment file size to 1 GB (1,073,741,824 bytes) in the chat message attachment picker/validator, and update all related user-facing error text to clearly state the new 1 GB limit in English.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-profile-photo-upload-flow-to-enforce-a-maximum-image-resolution-of-100-megapixels-width-height-100-000-000-for-uploaded-profile-photos-and-block-selection-upload-with-a-clear-english-error-message-when-exceeded",
+      "title": "Update the Profile Photo upload flow to enforce a maximum image resolution of 100 megapixels (width × height ≤ 100,000,000) for uploaded profile photos, and block selection/upload with a clear English error message when exceeded.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-align-profile-photo-screen-validation-help-text-with-the-new-100-megapixel-limit-and-the-backend-s-existing-1-gb-maximum-byte-size-constraint-for-profile-photos-ensure-all-user-facing-text-is-in-english",
+      "title": "Align Profile Photo screen validation/help text with the new 100 megapixel limit and the backend’s existing 1 GB maximum byte-size constraint for profile photos; ensure all user-facing text is in English.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-profile-screen-save-flow-so-clicking-save-profile-successfully-persists-the-updated-name-phone-number-to-the-backend-for-the-current-authenticated-user",
+      "title": "Fix the Profile screen save flow so clicking \"Save Profile\" successfully persists the updated name/phone number to the backend for the current authenticated user.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-frontend-sends-a-complete-userprofile-record-compatible-with-the-backend-candid-type-when-saving-creating-a-profile-including-the-profilephoto-field-preserving-any-existing-profilephoto-value-when-the-user-updates-only-name-phone",
+      "title": "Ensure the frontend sends a complete UserProfile record compatible with the backend candid type when saving/creating a profile (including the profilePhoto field), preserving any existing profilePhoto value when the user updates only name/phone.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-set-the-status-stories-viewing-behavior-to-a-full-screen-viewer-with-1-tap-to-next-tap-to-previous-navigation-and-2-swipe-navigation-between-status-items",
+      "title": "Set the Status/Stories viewing behavior to a full-screen viewer with (1) tap-to-next/tap-to-previous navigation and (2) swipe navigation between status items.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-set-status-stories-audience-visibility-rules-so-that-only-the-user-s-saved-contacts-and-the-user-themself-can-view-that-user-s-statuses",
+      "title": "Set Status/Stories audience visibility rules so that only the user’s saved contacts (and the user themself) can view that user’s statuses.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-set-allowed-status-stories-post-types-to-photo-video-and-text-audio-statuses-are-not-allowed-enforce-this-on-both-the-frontend-composer-and-backend-validation",
+      "title": "Set allowed Status/Stories post types to: photo, video, and text (audio statuses are not allowed). Enforce this on both the frontend composer and backend validation.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-status-stories-ui-entry-point-in-the-authenticated-app-and-implement-the-full-screen-status-viewer-with-tap-swipe-navigation-using-the-backend-status-stories-apis",
+      "title": "Add a Status/Stories UI entry point in the authenticated app and implement the full-screen status viewer with tap/swipe navigation using the backend Status/Stories APIs.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-status-composer-ui-to-allow-selecting-an-optional-music-audio-file-from-the-browser-when-creating-a-status-alongside-the-existing-photo-video-text-modes",
+      "title": "Update the Status composer UI to allow selecting an optional music/audio file from the browser when creating a status, alongside the existing photo/video/text modes.",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-status-viewer-ui-so-that-when-a-status-includes-an-attached-music-track-the-viewer-plays-it-during-viewing-and-stops-cleans-up-audio-on-navigation-close",
+      "title": "Update the Status viewer UI so that when a status includes an attached music track, the viewer plays it during viewing and stops/cleans up audio on navigation/close.",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-delete-status-option-in-the-status-ui-so-a-user-can-delete-their-own-status-posts-with-a-confirmation-step-and-see-the-ui-refresh-after-deletion",
+      "title": "Add a delete-status option in the Status UI so a user can delete their own status posts (with a confirmation step) and see the UI refresh after deletion.",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-react-query-hooks-mutations-needed-to-support-creating-statuses-with-optional-music-and-deleting-statuses-and-ensure-all-related-queries-invalidate-correctly",
+      "title": "Add React Query hooks/mutations needed to support creating statuses with optional music and deleting statuses, and ensure all related queries invalidate correctly.",
+      "reqIds": [
+        "REQ-51"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-status-stories-composer-ui-to-support-adding-an-optional-music-track-from-an-online-source-by-letting-the-user-paste-a-direct-audio-url-fetching-that-url-in-the-browser-and-attaching-the-fetched-audio-as-the-status-audio-track-same-storage-path-as-locally-selected-audio",
+      "title": "Extend the Status/Stories composer UI to support adding an optional music track from an online source by letting the user paste a direct audio URL, fetching that URL in the browser, and attaching the fetched audio as the status audio track (same storage path as locally-selected audio).",
+      "reqIds": [
+        "REQ-52"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-persisted-per-conversation-chat-history-so-that-when-an-authenticated-user-opens-a-chat-previous-messages-are-loaded-from-the-backend-and-remain-visible-while-staying-in-the-chat-not-reset-to-an-empty-local-only-state",
+      "title": "Implement persisted per-conversation chat history so that when an authenticated user opens a chat, previous messages are loaded from the backend and remain visible while staying in the chat (not reset to an empty local-only state).",
+      "reqIds": [
+        "REQ-54"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-user-presence-online-offline-tracking-for-the-web-app-when-a-user-is-active-in-the-web-app-they-should-appear-online-when-they-are-not-active-they-should-appear-offline-show-this-status-in-the-chat-header-and-anywhere-else-the-app-shows-a-selected-contact-e-g-conversation-contact-items",
+      "title": "Add user presence (online/offline) tracking for the web app: when a user is active in the web app they should appear Online; when they are not active they should appear Offline. Show this status in the chat header and anywhere else the app shows a selected contact (e.g., conversation/contact items).",
+      "reqIds": [
+        "REQ-56"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-hardcoded-chat-header-presence-text-online-with-real-presence-state-from-the-backend-for-the-selected-contact-and-ensure-the-presence-indicator-does-not-incorrectly-show-online-for-users-who-are-not-active",
+      "title": "Replace the current hardcoded chat header presence text (“Online”) with real presence state from the backend for the selected contact, and ensure the presence indicator does not incorrectly show Online for users who are not active.",
+      "reqIds": [
+        "REQ-57"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-react-query-layer-to-fetch-presence-as-a-combined-presence-last-seen-payload-and-use-it-in-the-chat-header-conversations-list-and-contacts-list",
+      "title": "Update the React Query layer to fetch presence as a combined presence+last-seen payload and use it in the chat header, conversations list, and contacts list.",
+      "reqIds": [
+        "REQ-59"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-requested-presence-ui-behavior-show-a-green-dot-when-a-contact-is-online-a-grey-dot-when-offline-and-display-a-human-readable-last-seen-time-when-offline-and-a-last-seen-timestamp-is-available",
+      "title": "Implement the requested presence UI behavior: show a green dot when a contact is online, a grey dot when offline, and display a human-readable “Last seen …” time when offline and a last-seen timestamp is available.",
+      "reqIds": [
+        "REQ-60"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -143,6 +452,220 @@
       "id": "AR-10",
       "summary": "Provide an app download link (APK/distribution option) or equivalent installable packaging flow",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Show a dedicated login screen first (before chat); make login option clearly visible",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add Contacts/Friends feature to connect with friends and start conversations",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Add WhatsApp-style calling: audio calls and video calls",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Implement backend support for user profiles and identity mapping based on the caller principal, including: creating a user profile on first login, reading/updating display name, and listing basic profile info needed by the frontend.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Enhance Contacts/Friends to add friends by phone number (international/all regions) and start chats from saved numbers",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Add explicit Admin/CEO login entry point and guidance (what admin ID is, how admins sign in)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Add and display an app logo/branding in the UI (clarify where the logo appears)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Extend the user profile model to store an optional phone number (international format) for each user, and provide backend functions to save/get it for the caller.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Add backend support to find a user by phone number and add a contact using a phone number, with validation and normalization for international numbers (E.164-style, e.g., +14155552671).",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Add a conditional state migration for the UserProfile type change so existing deployments can upgrade without losing user profiles.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Display the app logo using an action sequence (logo/splash behavior when opening the app)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Add a Profile page UI where authenticated users can view their profile and add/edit their mobile number in international (+country code/E.164) format and save changes",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Add profile photo support: create/update profile photo on the Profile page (upload/select image) and display it in relevant UI (e.g., Profile, header/avatar).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Extend the backend user profile model to support an optional profile photo reference and expose authenticated APIs to set, clear, and fetch a user’s profile photo.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-30",
+      "summary": "Add a conditional state migration so existing deployed user profiles upgrade safely to the new profile photo-enabled UserProfile type without losing stored profile data.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Increase chat attachment upload size limit to 1 GB (user request), subject to Internet Computer/canister constraints",
+      "reqIds": [],
+      "status": "blocked"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Enforce a 1 GB maximum attachment size on the backend file storage entry point so oversized uploads are rejected with a clear English error message (trap or returned error), to protect the canister from unbounded upload attempts.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Enforce a maximum profile photo size limit of 100 MP (megapixels) for uploaded profile images, with clear user-facing error messaging",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Make backend profile saving resilient so profile photo is not accidentally lost when updating name/phone: when saving/updating a caller profile, preserve the existing stored profilePhoto if the incoming profile photo is null and an existing photo is already stored.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-38",
+      "summary": "Add a Status/Stories feature and define its behavior: how users view statuses (full-screen with swipe/tap-to-next), who can see a user’s status (audience visibility rules), and what post types are allowed (photo/video/text/audio).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-42",
+      "summary": "Add minimal backend support for Status/Stories so authenticated users can create a status (photo/video/text), list statuses visible to them (contacts-only rule), and fetch a specific status item for viewing.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-43",
+      "summary": "Add ability to attach/select music from the browser when creating a Status/Story post (e.g., background music on photo/video status)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-44",
+      "summary": "Add option to delete a Status/Story post (user can remove their own status)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-45",
+      "summary": "Extend the Status/Stories data model and APIs to support an optional music track (selected from the user’s browser) attached to a status post, without adding a new standalone audio-only status type.",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-46",
+      "summary": "Add a conditional state migration for the StatusItem type change so existing deployed canister state upgrades without losing existing statuses.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-47",
+      "summary": "Allow adding music from online sources (e.g., via URL/search) for Status/Stories music attachment instead of only selecting a local file",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-49",
+      "summary": "Add backend validation for the optional Status/Stories audioTrack so oversized online/local music attachments are rejected consistently, and return clear English error messages.",
+      "reqIds": [
+        "REQ-53"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-50",
+      "summary": "Add user presence/online-offline status in chats/contacts (show when a user is online on the web, and update status accurately)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-52",
+      "summary": "Update the Motoko backend message storage so messages are stored with enough data to retrieve a full 1:1 conversation between two principals (at minimum: sender, recipient, content, timestamp, and status) and expose a query API to fetch messages for a conversation with a given contact.",
+      "reqIds": [
+        "REQ-55"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-53",
+      "summary": "Add presence UI indicators and last-seen: show green dot (online), grey dot (offline), and display last seen time in relevant UI (e.g., chat header and contacts list)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-54",
+      "summary": "Extend the Motoko backend presence system to track and expose a user’s last-seen time in addition to online/offline state.",
+      "reqIds": [
+        "REQ-58"
+      ],
       "status": "pending"
     }
   ],
